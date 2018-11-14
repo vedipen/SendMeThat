@@ -55,19 +55,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="EnableDisableSendMeThatCommand.cs" />
-    <Compile Include="General.Designer.cs">
+    <Compile Include="GeneralSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>General.settings</DependentUpon>
+      <DependentUpon>GeneralSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendMeThatPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="General.settings">
+    <None Include="GeneralSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>General.Designer.cs</LastGenOutput>
+      <LastGenOutput>GeneralSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Key.snk" />
     <None Include="packages.config" />

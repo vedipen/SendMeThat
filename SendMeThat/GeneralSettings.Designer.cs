@@ -13,11 +13,11 @@ namespace SendMeThat {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
-    internal sealed partial class General : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class GeneralSettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static General defaultInstance = ((General)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new General())));
+        private static GeneralSettings defaultInstance = ((GeneralSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new GeneralSettings())));
         
-        public static General Default {
+        public static GeneralSettings Default {
             get {
                 return defaultInstance;
             }

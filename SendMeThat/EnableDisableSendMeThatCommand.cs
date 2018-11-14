@@ -42,6 +42,7 @@ namespace SendMeThat
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
+            menuItem.Checked = GeneralSettings.Default.EnableSendMeThat;
             commandService.AddCommand(menuItem);
         }
 
@@ -88,9 +89,13 @@ namespace SendMeThat
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
         {
+            GeneralSettings.Default.EnableSendMeThat = !GeneralSettings.Default.EnableSendMeThat;
+            GeneralSettings.Default.Save();
+            var command = sender as MenuCommand;
+            command.Checked = GeneralSettings.Default.EnableSendMeThat;
             ThreadHelper.ThrowIfNotOnUIThread();
             string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "EnableDisableSendMeThatCommand";
+            string title = "Enable/Disable SendMeThat";
 
             // Show a message box to prove we were here
             VsShellUtilities.ShowMessageBox(
