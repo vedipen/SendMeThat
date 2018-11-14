@@ -1,10 +1,13 @@
-﻿using System;
+﻿
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.TextManager.Interop;
+using System;
 using System.ComponentModel.Design;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
 namespace SendMeThat
@@ -24,6 +27,64 @@ namespace SendMeThat
         /// </summary>
         public static readonly Guid CommandSet = new Guid("ade733d3-d1e6-4677-928b-d8164419b6a4");
 
+        public struct TextViewPosition
+        {
+            private readonly int _column;
+            private readonly int _line;
+
+            public TextViewPosition(int line, int column)
+            {
+                _line = line;
+                _column = column;
+            }
+
+            public int Line { get { return _line; } }
+            public int Column { get { return _column; } }
+
+
+            public static bool operator <(TextViewPosition a, TextViewPosition b)
+            {
+                if (a.Line < b.Line)
+                {
+                    return true;
+                }
+                else if (a.Line == b.Line)
+                {
+                    return a.Column < b.Column;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            public static bool operator >(TextViewPosition a, TextViewPosition b)
+            {
+                if (a.Line > b.Line)
+                {
+                    return true;
+                }
+                else if (a.Line == b.Line)
+                {
+                    return a.Column > b.Column;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            public static TextViewPosition Min(TextViewPosition a, TextViewPosition b)
+            {
+                return a > b ? b : a;
+            }
+
+            public static TextViewPosition Max(TextViewPosition a, TextViewPosition b)
+            {
+                return a > b ? a : b;
+            }
+        }
+
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
@@ -41,7 +102,7 @@ namespace SendMeThat
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
-            var menuItem = new MenuCommand(this.Execute, menuCommandID);
+            var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
             commandService.AddCommand(menuItem);
         }
 
@@ -57,7 +118,7 @@ namespace SendMeThat
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
+        private IServiceProvider ServiceProvider
         {
             get
             {
@@ -88,7 +149,6 @@ namespace SendMeThat
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
             string title = "DocumentCodeSpanCommand";
 
@@ -101,5 +161,51 @@ namespace SendMeThat
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
+
+        struct TextViewSelection
+        {
+            public TextViewPosition StartPosition { get; set; }
+            public TextViewPosition EndPosition { get; set; }
+            public string Text { get; set; }
+
+            public TextViewSelection(TextViewPosition a, TextViewPosition b, string text)
+            {
+                StartPosition = TextViewPosition.Min(a, b);
+                EndPosition = TextViewPosition.Max(a, b);
+                Text = text;
+            }
+        }
+
+        private TextViewSelection GetSelection(IServiceProvider serviceProvider)
+        {
+            var service = serviceProvider.GetService(typeof(SVsTextManager));
+            var textManager = service as IVsTextManager2;
+            IVsTextView view;
+            int result = textManager.GetActiveView2(1, null, (uint)_VIEWFRAMETYPE.vftCodeWindow, out view);
+
+            view.GetSelection(out int startLine, out int startColumn, out int endLine, out int endColumn);//end could be before beginning
+            var start = new TextViewPosition(startLine, startColumn);
+            var end = new TextViewPosition(endLine, endColumn);
+
+            view.GetSelectedText(out string selectedText);
+
+            TextViewSelection selection = new TextViewSelection(start, end, selectedText);
+            return selection;
+        }
+
+        private string GetActiveFilePath(IServiceProvider serviceProvider)
+        {
+            EnvDTE80.DTE2 applicationObject = serviceProvider.GetService(typeof(DTE)) as EnvDTE80.DTE2;
+            return applicationObject.ActiveDocument.FullName;
+        }
+
+        private void MenuItemCallback(object sender, EventArgs e)
+        {
+            TextViewSelection selection = GetSelection(ServiceProvider);
+            Console.WriteLine("Here : " + selection);
+            string activeDocumentPath = GetActiveFilePath(ServiceProvider);
+            //ShowAddDocumentationWindow(activeDocumentPath, selection);
+        }
+        
     }
 }
