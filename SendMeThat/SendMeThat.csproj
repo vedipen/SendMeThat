@@ -54,6 +54,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DocumentCodeSpanCommand.cs" />
     <Compile Include="EnableDisableSendMeThatCommand.cs" />
     <Compile Include="GeneralSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -77,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
+    <Content Include="Resources\DocumentCodeSpanCommand.png" />
     <Content Include="Resources\EnableDisableSendMeThatCommand.png" />
     <Content Include="Resources\SendMeThatPackage.ico" />
     <VSCTCompile Include="SendMeThatPackage.vsct">
