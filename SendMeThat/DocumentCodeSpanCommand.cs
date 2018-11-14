@@ -12,6 +12,79 @@ using Task = System.Threading.Tasks.Task;
 
 namespace SendMeThat
 {
+    public struct TextViewPosition
+    {
+        private readonly int _column;
+        private readonly int _line;
+
+        public TextViewPosition(int line, int column)
+        {
+            _line = line;
+            _column = column;
+        }
+
+        public int Line { get { return _line; } }
+        public int Column { get { return _column; } }
+
+
+        public static bool operator <(TextViewPosition a, TextViewPosition b)
+        {
+            if (a.Line < b.Line)
+            {
+                return true;
+            }
+            else if (a.Line == b.Line)
+            {
+                return a.Column < b.Column;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool operator >(TextViewPosition a, TextViewPosition b)
+        {
+            if (a.Line > b.Line)
+            {
+                return true;
+            }
+            else if (a.Line == b.Line)
+            {
+                return a.Column > b.Column;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static TextViewPosition Min(TextViewPosition a, TextViewPosition b)
+        {
+            return a > b ? b : a;
+        }
+
+        public static TextViewPosition Max(TextViewPosition a, TextViewPosition b)
+        {
+            return a > b ? a : b;
+        }
+    }
+
+    public struct TextViewSelection
+    {
+        public TextViewPosition StartPosition { get; set; }
+        public TextViewPosition EndPosition { get; set; }
+        public string Text { get; set; }
+
+        public TextViewSelection(TextViewPosition a, TextViewPosition b, string text)
+        {
+            StartPosition = TextViewPosition.Min(a, b);
+            EndPosition = TextViewPosition.Max(a, b);
+            Text = text;
+        }
+    }
+
+
     /// <summary>
     /// Command handler
     /// </summary>
@@ -27,63 +100,7 @@ namespace SendMeThat
         /// </summary>
         public static readonly Guid CommandSet = new Guid("ade733d3-d1e6-4677-928b-d8164419b6a4");
 
-        public struct TextViewPosition
-        {
-            private readonly int _column;
-            private readonly int _line;
-
-            public TextViewPosition(int line, int column)
-            {
-                _line = line;
-                _column = column;
-            }
-
-            public int Line { get { return _line; } }
-            public int Column { get { return _column; } }
-
-
-            public static bool operator <(TextViewPosition a, TextViewPosition b)
-            {
-                if (a.Line < b.Line)
-                {
-                    return true;
-                }
-                else if (a.Line == b.Line)
-                {
-                    return a.Column < b.Column;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            public static bool operator >(TextViewPosition a, TextViewPosition b)
-            {
-                if (a.Line > b.Line)
-                {
-                    return true;
-                }
-                else if (a.Line == b.Line)
-                {
-                    return a.Column > b.Column;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            public static TextViewPosition Min(TextViewPosition a, TextViewPosition b)
-            {
-                return a > b ? b : a;
-            }
-
-            public static TextViewPosition Max(TextViewPosition a, TextViewPosition b)
-            {
-                return a > b ? a : b;
-            }
-        }
+        
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -161,21 +178,7 @@ namespace SendMeThat
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
-
-        struct TextViewSelection
-        {
-            public TextViewPosition StartPosition { get; set; }
-            public TextViewPosition EndPosition { get; set; }
-            public string Text { get; set; }
-
-            public TextViewSelection(TextViewPosition a, TextViewPosition b, string text)
-            {
-                StartPosition = TextViewPosition.Min(a, b);
-                EndPosition = TextViewPosition.Max(a, b);
-                Text = text;
-            }
-        }
-
+        
         private TextViewSelection GetSelection(IServiceProvider serviceProvider)
         {
             var service = serviceProvider.GetService(typeof(SVsTextManager));
@@ -199,13 +202,18 @@ namespace SendMeThat
             return applicationObject.ActiveDocument.FullName;
         }
 
+        private void ShowSendToWindow(string activeDocumentPath, TextViewSelection selection)
+        {
+            var documentationControl = new SendToWindow(activeDocumentPath, selection);
+            documentationControl.ShowDialog();
+        }
+
         private void MenuItemCallback(object sender, EventArgs e)
         {
             TextViewSelection selection = GetSelection(ServiceProvider);
             Console.WriteLine("Here : " + selection);
             string activeDocumentPath = GetActiveFilePath(ServiceProvider);
-            //ShowAddDocumentationWindow(activeDocumentPath, selection);
+            ShowSendToWindow(activeDocumentPath, selection);
         }
-        
     }
 }

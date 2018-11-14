@@ -1,0 +1,39 @@
+﻿<local:BaseDialogWindow
+    xmlns:ui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0" x:Class="SendMeThat.SendToWindow"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:local="clr-namespace:Dialog"
+            mc:Ignorable="d" 
+            d:DesignHeight="450" d:DesignWidth="800"
+            Width="500"
+            Height="400"
+            Background="White"
+            x:Name="This"
+            WindowStyle="SingleBorderWindow"
+            Title="Send Me That!">    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="1" Background="#FFE1E1E1" Padding="5">
+            <StackPanel >
+                <TextBlock Text="Code : " Margin="5" />
+                <TextBox Grid.Row="1" x:Name="SelectionTextBox" Margin="5" IsReadOnly="True" MaxHeight="100" 
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         Text="{Binding SelectionText, Mode=OneWay}"
+                         />
+            </StackPanel>
+        </Border>
+        <Border Grid.Row="3" Background="#FFE1E1E1" Padding="5">
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Margin="5" Padding="5" Click="OnSave">Save</Button>
+                <Button Margin="5" Padding="5" Click="OnCancel">Cancel</Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</local:BaseDialogWindow>
