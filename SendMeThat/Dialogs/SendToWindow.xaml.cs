@@ -38,10 +38,11 @@ namespace SendMeThat
             this.Close();
         }
 
-        private void OnSave(object sender, RoutedEventArgs e)
+        private void OnSend(object sender, RoutedEventArgs e)
         {
             string Input = SelectionTextBox.Text;
-            MessageBox.Show("Input received : " + Input);
+            string ReceiversEmail = ReceiversEmailTextBox.Text;
+            MessageBox.Show("Input received : " + Input + " sdfds " + ReceiversEmail);
         }
 
     }
