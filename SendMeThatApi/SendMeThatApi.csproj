@@ -194,9 +194,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\database_firewall_rules.cs">
-      <DependentUpon>SendMeThatModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SendMeThatModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

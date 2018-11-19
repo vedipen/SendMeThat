@@ -10,7 +10,7 @@ namespace SendMeThatApi.Controllers
 {
     public class SendMeThatController : ApiController
     {
-        private readonly SendMeThatDbEntities DbEntity;
+        private SendMeThatDbEntities DbEntity;
 
         public SendMeThatController()
         {
@@ -33,6 +33,7 @@ namespace SendMeThatApi.Controllers
         public HttpResponseMessage Post([FromBody]SendMeThatTable table)
         {
             DbEntity.SendMeThatTables.Add(table);
+            DbEntity.SaveChanges();
             return new HttpResponseMessage { Content = new StringContent("[{\"Success\":\"Success\"},{\"Message\":\"Code sent\"}],{\"Data\":"+table.ReceiversEmail+"}", System.Text.Encoding.UTF8, "application/json") };
         }
 

@@ -18,5 +18,6 @@ namespace SendMeThatApi.Models
         public string ReceiversEmail { get; set; }
         public System.DateTime SharedDate { get; set; }
         public string SharedCode { get; set; }
+        public int SNo { get; set; }
     }
 }

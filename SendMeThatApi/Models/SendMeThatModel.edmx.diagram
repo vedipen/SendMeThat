@@ -4,9 +4,8 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="989ec14652b04a06a9166a03dee421d0" Name="Diagram1">
+      <Diagram DiagramId="32dce74b7ae741d79da6c0784e3361e6" Name="Diagram1">
         <EntityTypeShape EntityType="SendMeThatDbModel.SendMeThatTable" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SendMeThatDbModel.database_firewall_rules" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
