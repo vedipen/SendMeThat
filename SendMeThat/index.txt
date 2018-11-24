@@ -1,0 +1,133 @@
+@model OPWCitizenPortal.Models.RequestAndUser
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Requests</h2>
+<br>
+@using (Html.BeginForm("SortServices", "Services", FormMethod.Get))
+{
+    <b> Sort By : </b>
+    @Html.RadioButton("OptionSelected", "Status") <text>Status</text>
+    @Html.RadioButton("OptionSelected", "Priority") <text>Priority</text>
+    @Html.RadioButton("OptionSelected", "Date") <text>Date Of Incident</text>
+    <br>
+    <br>
+    <input type="submit" name="submit" value="Sort" />
+    <br><br>
+}
+<table class="table table-hover table-bordered table-responsive table-striped bottom-right bottom-left bottom" style="border:2px solid double;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Requests.First().RequestID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Requests.First().DateOfIncident)
+            </th>
+            <th>
+                Type of Request
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Requests.First().RequestDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Requests.First().Location)
+            </th>
+            @if (ViewBag.ID == 1 || ViewBag.ID == 3)
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.Requests.First().CreateTime)
+                </th>
+                <th>
+                    Assigned To
+                </th>
+                <th>
+                    Labor
+                </th>
+            }
+            <th>
+                Priority
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    <thead>
+    <tbody>
+        @foreach (var item in Model.Requests)
+        {
+            if (ViewBag.Id == 1 || (ViewBag.Id == 3 && item.User1?.UserID == ViewBag.UserId)
+            || (ViewBag.Id == 2 && item.CreateBy == ViewBag.UserId) ||
+            (ViewBag.Id == 4 && item.UpdateBy == ViewBag.UserId))
+            {
+                <tr class="table-light">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RequestID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateOfIncident)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TypeOfRequest1.TypeOfRequestDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RequestDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    @if (ViewBag.ID == 1 || ViewBag.ID == 3)
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreateTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User1.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Users.Where(x => x.UserID == item.UpdateBy).First().UserName)
+                        </td>
+                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaskPriority.PriorityDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaskStatu.TaskStatusDescription)
+                    </td>
+
+                    @if (ViewBag.ID == 1)
+                    {
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.RequestID }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.RequestID })
+                        </td>
+                    }
+                    @if (ViewBag.ID == 3)
+                    {
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.RequestID }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.RequestID })
+                        </td>
+                    }
+                    @if (ViewBag.ID == 2)
+                    {
+                        <td>
+                            @Html.ActionLink("Details", "Details", new { id = item.RequestID })
+                        </td>
+                    }
+                    @if (ViewBag.ID == 4)
+                    {
+                        <td>
+                            @Html.ActionLink("Resolve", "Resolve", new { id = item.RequestID }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.RequestID })
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    <tbody>
+</table>

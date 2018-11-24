@@ -9,7 +9,7 @@ namespace SendMeThat
 {
     public class CodeViewModel
     {
-        public enum SendToResult { Cancel, Save, Delete }
+        public enum SendToResult { Cancel, Send, Delete }
         public SendToResult Result { get; set; }
         public event Action CloseRequest;
         private string _documentPath;
@@ -28,6 +28,6 @@ namespace SendMeThat
         
         public string SelectionText => _selection.Text;
         public ICommand CancelCommand;
-        public ICommand SaveCommand;
+        public ICommand SendCommand;
     }
 }

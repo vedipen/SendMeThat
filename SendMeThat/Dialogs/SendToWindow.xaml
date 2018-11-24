@@ -27,11 +27,15 @@
                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                          Text="{Binding SelectionText, Mode=OneWay}"
                          />
+                <TextBlock Text="To : " Margin="5" />
+                <TextBox x:Name="ReceiversEmailTextBox" Margin="5" MaxHeight="100" 
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         />
             </StackPanel>
         </Border>
         <Border Grid.Row="3" Background="#FFE1E1E1" Padding="5">
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Margin="5" Padding="5" Click="OnSave">Save</Button>
+                <Button Margin="5" Padding="5" Click="OnSend">Send</Button>
                 <Button Margin="5" Padding="5" Click="OnCancel">Cancel</Button>
             </StackPanel>
         </Border>

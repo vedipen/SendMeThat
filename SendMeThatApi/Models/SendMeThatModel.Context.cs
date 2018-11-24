@@ -26,6 +26,5 @@ namespace SendMeThatApi.Models
         }
     
         public virtual DbSet<SendMeThatTable> SendMeThatTables { get; set; }
-        public virtual DbSet<database_firewall_rules> database_firewall_rules { get; set; }
     }
 }

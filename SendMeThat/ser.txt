@@ -1,0 +1,315 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using OPWCitizenPortal.Models;
+using System.Web.UI.WebControls;
+
+namespace OPWCitizenPortal.Controllers
+{
+    public class ServicesController : Controller
+    {
+        private OPWCitizenPortalDBEntities db = new OPWCitizenPortalDBEntities();
+
+        // GET: Services
+        public async Task<ActionResult> Index()
+        {
+            ViewBag.ID = UserController.Id;
+            ViewBag.UserId = UserController.UserId;
+            ViewBag.RoleID = UserController.RoleID;
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription");
+            var requests = db.Requests.Include(r => r.User).Include(r => r.TaskPriority).Include(r => r.TaskStatu).Include(r => r.Task).Include(r => r.User1).Include(r => r.TypeOfRequest1);
+            RequestAndUser thisModel = new RequestAndUser();
+            thisModel.Requests = await requests.ToListAsync();
+            thisModel.Users = db.Users;
+            return View(thisModel);
+        }
+
+        public ActionResult DashBoard()
+        {
+            ViewBag.RoleID = UserController.RoleID;
+            ViewBag.ID = UserController.Id;
+            ViewBag.UserId = UserController.UserId;
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription");
+            return View();
+        }
+
+        // GET: Services/Details/5
+        public async Task<ActionResult> Details(int? id)
+        {
+            ViewBag.RoleID = UserController.RoleID;
+            ViewBag.ID = UserController.Id;
+            ViewBag.UserId = UserController.UserId;
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription");
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Request request = await db.Requests.FindAsync(id);
+            if (request == null)
+            {
+                return HttpNotFound();
+            }
+            return View(request);
+        }
+
+        // GET: Services/Create
+        public ActionResult Create()
+        {
+            ViewBag.RoleID = UserController.RoleID;
+            ViewBag.CreateBy = new SelectList(db.Users, "UserID", "UserName");
+            ViewBag.Priority = new SelectList(db.TaskPriorities, "PriorityId", "PriorityDescription");
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription");
+            ViewBag.TaskId = new SelectList(db.Tasks, "TaskID", "TaskDescription");
+            ViewBag.TaskOwnId = new SelectList(db.Users.Where(x => x.RoleId == 3), "UserID", "UserName");
+            ViewBag.TypeOfRequest = new SelectList(db.TypeOfRequests, "TypeOfRequestId", "TypeOfRequestDescription");
+            return View();
+        }
+
+        // POST: Services/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create([Bind(Include = "RequestID, Priority,TaskId,RequestDescription,Location,FeedBack,Mobile,Email,RejectReason,DateOfIncident,TaskOwnId,TypeOfRequest")] Request request)
+        {
+
+            ViewBag.RoleID = UserController.RoleID;
+            if (UserController.Id != null && UserController.UserId != null && UserController.Id !=0 && UserController.UserId !=0)
+            {
+                request.CreateBy = UserController.UserId;
+                request.UpdateBy = UserController.UserId;
+            }
+            else
+            {
+                request.CreateBy = 12;
+                request.UpdateBy = 18;
+            }
+            request.Status = 1;
+            request.CreateTime = DateTime.Now;
+            request.UpdateTime = DateTime.Now;
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            if (ModelState.IsValid)
+            {
+                db.Requests.Add(request);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            ViewBag.CreateBy = new SelectList(db.Users, "UserID", "UserName", request.CreateBy);
+            ViewBag.Priority = new SelectList(db.TaskPriorities, "PriorityId", "PriorityDescription", request.Priority);
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription", request.Status);
+            ViewBag.TaskId = new SelectList(db.Tasks, "TaskID", "TaskDescription", request.TaskId);
+            ViewBag.TaskOwnId = new SelectList(db.Users.Where(x => x.RoleId == 3), "UserID", "UserName", request.TaskOwnId);
+            ViewBag.TypeOfRequest = new SelectList(db.TypeOfRequests, "TypeOfRequestId", "TypeOfRequestDescription", request.TypeOfRequest);
+
+            return View(request);
+        }
+
+        // GET: Services/Edit/5
+        public async Task<ActionResult> Edit(int? id)
+        {
+
+            ViewBag.RoleID = UserController.RoleID;
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Request request = await db.Requests.FindAsync(id);
+            if (request == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.RequestType = db.TypeOfRequests.Where(x => x.TypeOfRequestId == request.TypeOfRequest).First().TypeOfRequestDescription;
+            ViewBag.Labor = db.Users.Where(x => x.UserID == request.UpdateBy).First().UserName;
+            ViewBag.AssignedTo = db.Users.Where(x => x.UserID == request.TaskOwnId).First().UserName;
+            ViewBag.CreateBy = new SelectList(db.Users, "UserID", "UserName", request.CreateBy);
+            ViewBag.Priority = new SelectList(db.TaskPriorities, "PriorityId", "PriorityDescription", request.Priority);
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription", request.Status);
+            ViewBag.TaskId = new SelectList(db.Tasks, "TaskID", "TaskDescription", request.TaskId);
+            ViewBag.TaskOwnId = new SelectList(db.Users.Where(x => x.RoleId == 3), "UserID", "UserName", request.TaskOwnId);
+            ViewBag.TaskLaborId = new SelectList(db.Users.Where(x => x.RoleId == 4), "UserID", "UserName", request.TaskOwnId);
+            ViewBag.TypeOfRequest = new SelectList(db.TypeOfRequests, "TypeOfRequestId", "TypeOfRequestDescription", request.TypeOfRequest);
+            return View(request);
+        }
+
+        // POST: Services/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Include = "RequestID,Priority,Status,TaskId,RequestDescription,Location,FeedBack,Mobile,Email,RejectReason,CreateTime,UpdateTime,DateOfIncident,TaskOwnId,TypeOfRequest,UpdateBy,CreateBy")] Request request)
+        {
+            request.UpdateBy = 17;
+            ViewBag.RoleID = UserController.RoleID;
+            if(request.TaskOwnId!= null && request.Status == 1)
+            {
+                request.Status = 2;
+            }
+            request.UpdateTime = DateTime.Now;
+            if (ModelState.IsValid)
+            {
+                db.Entry(request).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            ViewBag.AssignedTo = db.Users.Where(x => x.UserID == request.TaskOwnId).First().UserName;
+            ViewBag.Labor = db.Users.Where(x => x.UserID == request.UpdateBy).First().UserName;
+            ViewBag.RequestType = db.TypeOfRequests.Where(x => x.TypeOfRequestId == request.TypeOfRequest).First().TypeOfRequestDescription;
+            ViewBag.CreateBy = new SelectList(db.Users, "UserID", "UserName", request.CreateBy);
+            ViewBag.Priority = new SelectList(db.TaskPriorities, "PriorityId", "PriorityDescription", request.Priority);
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription", request.Status);
+            ViewBag.TaskId = new SelectList(db.Tasks, "TaskID", "TaskDescription", request.TaskId);
+            ViewBag.TaskOwnId = new SelectList(db.Users.Where(x => x.RoleId == 3), "UserID", "UserName", request.TaskOwnId);
+            ViewBag.UpdateBy = new SelectList(db.Users.Where(x => x.RoleId == 4), "UserID", "UserName", request.UpdateBy);
+            ViewBag.TypeOfRequest = new SelectList(db.TypeOfRequests, "TypeOfRequestId", "TypeOfRequestDescription", request.TypeOfRequest);
+
+            return View(request);
+        }
+
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        public async Task<ActionResult> Resolve(int ? id)
+        {
+            ViewBag.RoleID = UserController.RoleID;
+            Request request = await db.Requests.FindAsync(id);
+            request.UpdateBy = UserController.UserId;
+            if (request.TaskOwnId != null)
+            {
+                request.Status = 8;
+            }
+            request.UpdateTime = DateTime.Now;
+            if (ModelState.IsValid)
+            {
+                db.Entry(request).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            ViewBag.CreateBy = new SelectList(db.Users, "UserID", "UserName", request.CreateBy);
+            ViewBag.Priority = new SelectList(db.TaskPriorities, "PriorityId", "PriorityDescription", request.Priority);
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription", request.Status);
+            ViewBag.TaskId = new SelectList(db.Tasks, "TaskID", "TaskDescription", request.TaskId);
+            ViewBag.TaskOwnId = new SelectList(db.Users.Where(x => x.RoleId == 3), "UserID", "UserName", request.TaskOwnId);
+            ViewBag.TypeOfRequest = new SelectList(db.TypeOfRequests, "TypeOfRequestId", "TypeOfRequestDescription", request.TypeOfRequest);
+            return View(request);
+        }
+
+        // GET: Services/Delete/5
+        public async Task<ActionResult> Delete(int? id)
+        {
+
+            ViewBag.RoleID = UserController.RoleID;
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Request request = await db.Requests.FindAsync(id);
+            if (request == null)
+            {
+                return HttpNotFound();
+            }
+            return View(request);
+        }
+
+
+        // POST: Services/Assign
+        [HttpPost, ActionName("Assign")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AssignRequest([Bind(Include = "RequestID,Status,TaskOwnId")] Request request)
+        {
+
+            ViewBag.RoleID = UserController.RoleID;
+            // check if the request is valid.
+            if (request == null || request.RequestID == 0) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,"The request is invalid.");
+            }
+            Request persistentRequest = await db.Requests.FindAsync(request.RequestID);
+            if(persistentRequest == null)
+            {
+                return HttpNotFound();
+            }
+
+            // check the status
+            if(request.Status != 1 || request.Status != 0 || request.Status != 2) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "The status of request is invalid.");
+            }
+
+            // check the task own
+            if (request.TaskOwnId == null) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "The task owner can not be null.");
+            }
+            User existingUser = await db.Users.FindAsync(request.TaskOwnId);
+            if (existingUser == null) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "The task owner is invalid.");
+            }
+
+            persistentRequest.Status = 2;
+            persistentRequest.TaskOwnId = request.TaskOwnId;
+            persistentRequest.UpdateTime = DateTime.Now;
+            persistentRequest.UpdateBy = ViewBag.UserId;
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        // POST: Services/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(int id)
+        {
+
+            ViewBag.RoleID = UserController.RoleID;
+            Request request = await db.Requests.FindAsync(id);
+            db.Requests.Remove(request);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult SortServices(string optionSelected, string searchValue)
+        {
+            ViewBag.RoleID = UserController.RoleID;
+            ViewBag.ID = UserController.Id;
+            ViewBag.UserId = UserController.UserId;
+            ViewBag.Status = new SelectList(db.TaskStatus, "TaskStatusId", "TaskStatusDescription");
+            IEnumerable<Request> reqDetails = this.SortReqs(optionSelected, searchValue);
+            return this.View("Index", reqDetails);
+        }
+
+        public IEnumerable<Request> SortReqs(string optionSelected, string searchValue)
+        {
+            IEnumerable<Request> reqDetails = db.Requests.Include(r => r.User).Include(r => r.TaskPriority).Include(r => r.TaskStatu).Include(r => r.Task).Include(r => r.User1).Include(r => r.TypeOfRequest1);
+
+            IEnumerable<Request> matchingDetails;
+            if (optionSelected == "Status")
+            {
+                matchingDetails = reqDetails.OrderBy(x => x.TaskStatu.TaskStatusDescription).ToList();
+            }
+            else if (optionSelected == "Priority")
+            {
+                matchingDetails = reqDetails.OrderBy(x => x.Priority).ToList();
+            }
+            else if (optionSelected == "Date")
+            {
+                matchingDetails = reqDetails.OrderBy(x => x.UpdateTime).ToList();
+            }
+            else
+            {
+                matchingDetails = reqDetails;
+            }
+
+            return matchingDetails;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}

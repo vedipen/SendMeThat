@@ -194,9 +194,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\database_firewall_rules.cs">
-      <DependentUpon>SendMeThatModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SendMeThatModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -268,7 +265,6 @@
       <DependentUpon>SendMeThatModel.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\SendMeThatApi - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\SendMeThatApi - Web Deploy1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
