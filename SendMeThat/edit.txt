@@ -1,0 +1,227 @@
+@model OPWCitizenPortal.Models.Request
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<script src="~/Scripts/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+<script charset="UTF-8" type="text/javascript" src="https://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0&callback=initMap" async defer></script>
+
+<script type="text/javascript" language="javascript">
+
+    function initialize(mapDiv, _zoom) {
+        var mapOptions = {
+            credentials: "AvHf-9P8zutrLA7tEtUNXRH8rye3-lrY5t3jaO0ga54_Fj2wK3wTodA2JQf-D7Nq",
+            center: new Microsoft.Maps.Location(17.4808441, 78.3812628),
+            mapTypeId: Microsoft.Maps.MapTypeId.road,
+            zoom: _zoom
+        }
+        map = new Microsoft.Maps.Map(mapDiv, mapOptions);
+
+        Microsoft.Maps.Events.addHandler(map, 'click', function (e) {
+            if (e.targetType == "map") {
+                map.entities.clear();
+                var point = new Microsoft.Maps.Point(e.getX(), e.getY());
+                latlng = e.target.tryPixelToLocation(point);
+                var marker = new Microsoft.Maps.Pushpin(latlng, { visible: true });
+                map.entities.push(marker);
+                getLocationDetailsFormLatLongPoints(latlng.latitude, latlng.longitude);
+            }
+        });
+    }
+
+    function getLocationDetailsFormLatLongPoints(_lat, _lng) {
+        $.ajax({
+            url: "https://dev.virtualearth.net/REST/v1/Locations/" + _lat + "," + _lng,
+            dataType: "jsonp",
+            data: {
+                key: "AvHf-9P8zutrLA7tEtUNXRH8rye3-lrY5t3jaO0ga54_Fj2wK3wTodA2JQf-D7Nq",
+                includeEntityTypes: "Address",
+                includeNeighborhood: "1",
+                include: "ciso2"
+            },
+            jsonp: "jsonp",
+            success: function (data) {
+                var result = data.resourceSets[0];
+                if (result) {
+                    if (result.estimatedTotal > 0) {
+                        $("#LocationValue").val(result.resources[0].address.addressLine);
+                        var _msg = "Latitude:- " + _lat;
+                        _msg += " and " + "Longitude:- " + _lng;
+                        _msg += " Location:- " + result.resources[0].address.addressLine;
+                        //alert(_msg);
+                    }
+                    else {
+                        alert("Location couldn't be fetched. Please enter manually");
+                    }
+                }
+            }
+        });
+    }
+
+    function initMap() {
+        initialize(document.getElementById("divMap"), 12);
+    }
+
+</script>
+
+<h2>Edit Request</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Request</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.TaskId)
+    @Html.HiddenFor(model => model.FeedBack)
+    @Html.HiddenFor(model => model.UpdateTime)
+    @Html.HiddenFor(model => model.CreateTime)
+    @Html.HiddenFor(model => model.CreateBy)
+    @Html.HiddenFor(model => model.TypeOfRequest)
+
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.RequestID, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.RequestID, new { @readonly = true, htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.RequestID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.RequestDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.RequestDescription, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.RequestDescription, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @if (ViewBag.RoleID == 3)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.UpdateBy, "Labor Assigned", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("UpdateBy", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UpdateBy, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.RoleID == 1)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.UpdateBy, "Labor Assigned", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.UpdateBy)
+                @Html.ViewBag.Labor
+            </div>
+        </div>
+    }
+
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Status, "Status", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Priority, "Priority", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("Priority", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateOfIncident, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.DateOfIncident, new { @readonly = true, htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TypeOfRequest, "Request Type", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.ViewBag.RequestType
+        </div>
+    </div>
+
+    @if (ViewBag.RoleID == 1)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.TaskOwnId, "Assigned To", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("TaskOwnId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TaskOwnId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(model => model.TaskOwnId)
+    }
+    @if (ViewBag.RoleID == 3)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.TaskOwnId, "Assigned To", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.ViewBag.AssignedTo
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Mobile, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Mobile, new { @readonly = true, htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Email, new { @readonly = true, htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.RejectReason, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.RejectReason, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.RejectReason, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div>
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", @id = "LocationValue" } })
+                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-10" id="divMap" align="left" style="top:10px;position: relative; width: 480px; height: 480px;cursor: help; "></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
