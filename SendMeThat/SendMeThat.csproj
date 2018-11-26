@@ -56,10 +56,14 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\MyCodeSnippetsCommand.cs" />
     <Compile Include="Dialogs\BaseDialogWindow.cs" />
     <Compile Include="Dialogs\CodeViewModel.cs" />
     <Compile Include="Commands\DocumentCodeSpanCommand.cs" />
     <Compile Include="Commands\EnableDisableSendMeThatCommand.cs" />
+    <Compile Include="Dialogs\ReceiverWindow.xaml.cs">
+      <DependentUpon>ReceiverWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GeneralSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -87,6 +91,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\MyCodeSnippetsCommand.png" />
     <Content Include="index.html" />
     <Content Include="Resources\DocumentCodeSpanCommand.png" />
     <Content Include="Resources\EnableDisableSendMeThatCommand.png" />
@@ -205,6 +210,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Dialogs\ReceiverWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\SendToWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

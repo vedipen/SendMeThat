@@ -73,6 +73,7 @@ namespace SendMeThat
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await EnableDisableSendMeThatCommand.InitializeAsync(this);
             await DocumentCodeSpanCommand.InitializeAsync(this);
+            await MyCodeSnippetsCommand.InitializeAsync(this);
         }
 
         #endregion

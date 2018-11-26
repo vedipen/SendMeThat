@@ -45,11 +45,14 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidSendMeThatPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+      <!--<Group guid="guidSendMeThatPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSendMeThatPackageCmdSet" id="TopLevelMenu" />
-      </Group>
+      </Group>-->
       <Group guid="guidSendMeThatPackageCmdSet1" id="EditorContextMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+      </Group>
+      <Group guid="guidSendMeThatPackageCmdSet2" id="MyCodeSnippetGroup" priority="0x0600">
+        <Parent guid="guidSendMeThatPackageCmdSet" id="TopLevelMenu" />
       </Group>
     </Groups>
 
@@ -78,6 +81,13 @@
           <ButtonText>Send this to..</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidSendMeThatPackageCmdSet2" id="cmdidMyCodeSnippetsCommand" priority="0x0100" type="Button">
+        <Parent guid="guidSendMeThatPackageCmdSet2" id="MyCodeSnippetGroup" />
+        <Icon guid="guidImages2" id="bmpPic1" />
+        <Strings>
+          <ButtonText>My Code Snippets!</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -89,6 +99,7 @@
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
       <Bitmap guid="guidImages" href="Resources\EnableDisableSendMeThatCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
       <Bitmap guid="guidImages1" href="Resources\DocumentCodeSpanCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+      <Bitmap guid="guidImages2" href="Resources\MyCodeSnippetsCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
     </Bitmaps>
   </Commands>
 
@@ -118,6 +129,20 @@
     </GuidSymbol>
   
     <GuidSymbol value="{891749e9-341e-4949-8f7e-7e04a250d65a}" name="guidImages1">
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+      <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+  
+    <GuidSymbol value="{1b92d865-37ff-43df-b641-0680928faa58}" name="guidSendMeThatPackageCmdSet2">
+      <IDSymbol value="4128" name="MyCodeSnippetGroup" />
+      <IDSymbol value="256" name="cmdidMyCodeSnippetsCommand" />
+    </GuidSymbol>
+  
+    <GuidSymbol value="{d38de274-2b41-4d25-adc2-13c9517d85ec}" name="guidImages2">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPicSearch" value="3" />

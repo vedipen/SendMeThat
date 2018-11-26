@@ -1,5 +1,4 @@
-﻿
-using EnvDTE;
+﻿using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
@@ -100,7 +99,7 @@ namespace SendMeThat
         /// </summary>
         public static readonly Guid CommandSet = new Guid("ade733d3-d1e6-4677-928b-d8164419b6a4");
 
-        
+
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -157,28 +156,6 @@ namespace SendMeThat
             Instance = new DocumentCodeSpanCommand(package, commandService);
         }
 
-        /// <summary>
-        /// This function is the callback used to execute the command when the menu item is clicked.
-        /// See the constructor to see how the menu item is associated with this function using
-        /// OleMenuCommandService service and MenuCommand class.
-        /// </summary>
-        /// <param name="sender">Event sender.</param>
-        /// <param name="e">Event args.</param>
-        private void Execute(object sender, EventArgs e)
-        {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "DocumentCodeSpanCommand";
-
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.package,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-        }
-        
         private TextViewSelection GetSelection(IServiceProvider serviceProvider)
         {
             var service = serviceProvider.GetService(typeof(SVsTextManager));
