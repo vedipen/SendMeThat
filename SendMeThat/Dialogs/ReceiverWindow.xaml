@@ -6,27 +6,24 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:local="clr-namespace:Dialog"
             mc:Ignorable="d"
-            Width="330"
-            Height="294.667"
+            Width="350"
+            Height="300"
             Background="White"
             x:Name="This"
             WindowStyle="SingleBorderWindow"
             Title="Send Me That!">
-    <ListView x:Name="codeList">
+    <ListView x:Name="codeList" >
         <ListView.ItemTemplate>
             <DataTemplate>
-                <StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Recent Code Snippets :  "></TextBlock>
-                    </StackPanel>
+                <StackPanel >
                     <TextBlock Text="From : "></TextBlock>
                     <TextBlock Text="{Binding SendersEmail}"></TextBlock>
                     <TextBlock Text="Code : "></TextBlock>
                     <TextBox IsReadOnly="True" Text="{Binding SharedCode}"></TextBox>
+                    <Border>
+                    </Border>
                 </StackPanel>
-
             </DataTemplate>
         </ListView.ItemTemplate>
-
     </ListView>
 </local:BaseDialogWindow>

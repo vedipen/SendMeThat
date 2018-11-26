@@ -8,33 +8,38 @@
             xmlns:local="clr-namespace:Dialog"
             mc:Ignorable="d" 
             d:DesignHeight="180" d:DesignWidth="351"
-            Width="Auto"
-            Height="Auto"
+            Width="351"
+            Height="265"
             x:Name="This"
             WindowStyle="ThreeDBorderWindow"
             Title="Send Me That!">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="213*"/>
+            <ColumnDefinition Width="134*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="1" Background="#FFE1E1E1" Padding="0">
+        <Border Grid.Row="1" Background="#FFE1E1E1" Padding="0" Grid.ColumnSpan="2">
             <StackPanel >
                 <TextBlock Text="Code : " Margin="5" />
-                <TextBox Grid.Row="1" x:Name="SelectionTextBox" Margin="5" IsReadOnly="True" MaxHeight="100" 
+                <TextBox Grid.Row="1" x:Name="SelectionTextBox" Margin="5" IsReadOnly="True" Height="100" 
                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                          Text="{Binding SelectionText, Mode=OneWay}"
                          />
+                
                 <TextBlock Text="To : " Margin="5" />
 
-                <TextBox x:Name="ReceiversEmailTextBox" Margin="5" MaxHeight="100" 
+                <TextBox x:Name="ReceiversEmailTextBox" Margin="5" 
                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                          />
             </StackPanel>
         </Border>
-        <Border Grid.Row="4" Background="#FFE1E1E1" Padding="5">
+        <Border Grid.Row="2" Background="#FFE1E1E1" Padding="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Margin="5" Padding="5" Click="OnSend">Send</Button>
                 <Button Margin="5" Padding="5" Click="OnCancel">Cancel</Button>
