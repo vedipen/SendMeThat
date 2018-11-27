@@ -1,4 +1,4 @@
-﻿<local:BaseDialogWindow
+﻿<!--<local:BaseDialogWindow
     xmlns:ui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0" x:Class="SendMeThat.ReceiverWindow"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -26,4 +26,41 @@
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>
+</local:BaseDialogWindow>-->
+
+<local:BaseDialogWindow
+    xmlns:ui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0" x:Class="SendMeThat.ReceiverWindow"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:local="clr-namespace:Dialog"
+            mc:Ignorable="d"
+            Width="350"
+            Height="300"
+            Background="White"
+            x:Name="This"
+            WindowStyle="SingleBorderWindow"
+            Title="Send Me That! - Recent Code Snippets">
+        <ListView x:Name="codeList" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <GroupBox Width="300" Height="Auto">
+                        <GroupBox.Header>
+                            <Label>...
+                            </Label>
+                        </GroupBox.Header>
+                        <StackPanel>
+                            <TextBlock Text="From : "></TextBlock>
+                            <TextBlock Text="{Binding SendersEmail}"></TextBlock>
+                            <TextBlock Text="Code : "></TextBlock>
+                            <TextBox IsReadOnly="True" Text="{Binding SharedCode}"></TextBox>
+                            <Border>
+                            </Border>
+                        </StackPanel>
+                    </GroupBox>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 </local:BaseDialogWindow>

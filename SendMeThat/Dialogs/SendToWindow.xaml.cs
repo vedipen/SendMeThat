@@ -1,4 +1,5 @@
 ﻿using Dialog;
+using EnvDTE;
 using Microsoft.Win32;
 using SendMeThat.Models;
 using System;
@@ -48,9 +49,27 @@ namespace SendMeThat
             string SendersEmail = GetUserEmailAddress();
             if(SendersEmail == null)
             {
-                MessageBox.Show("Please Login to Visual Studio to continue");
-                this.Close();
-                return;
+                if (GeneralSettings.Default.UserEmail == "Empty" || GeneralSettings.Default.UserEmail == null)
+                {
+                    var dialog = new GetUserEmailID();
+                    if (dialog.ShowDialog() == true)
+                    {
+                        if (dialog.ResponseText != null && dialog.ResponseText.Count() != 0)
+                        {
+                            SendersEmail = dialog.ResponseText;
+                            GeneralSettings.Default.UserEmail = SendersEmail;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Unable to send");
+                            return;
+                        }
+                    }
+                } 
+                else
+                {
+                    SendersEmail = GeneralSettings.Default.UserEmail;
+                }
             }
             string SendersName = GetUserName();
             HttpClient client = new HttpClient();

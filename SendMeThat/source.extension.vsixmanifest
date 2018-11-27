@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="SendMeThat.fd3efc3d-7620-400b-8454-7f6ef152dc61" Version="1.0" Language="en-US" Publisher="Dipen Ved" />
-    <DisplayName>SendMeThat</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Identity Id="SendMeThat.fd3efc3d-7620-400b-8454-7f6ef152dc61" Version="1.1" Language="en-US" Publisher="Team Send Me That" />
+    <DisplayName>Send Me That!</DisplayName>
+    <Description>Now share your code snippets inside of Visual Studio directly. Making lives easy.</Description>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0, 16.0)" />

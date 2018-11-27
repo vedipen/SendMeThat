@@ -61,6 +61,9 @@
     <Compile Include="Dialogs\CodeViewModel.cs" />
     <Compile Include="Commands\DocumentCodeSpanCommand.cs" />
     <Compile Include="Commands\EnableDisableSendMeThatCommand.cs" />
+    <Compile Include="Dialogs\GetUserEmailID.xaml.cs">
+      <DependentUpon>GetUserEmailID.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ReceiverWindow.xaml.cs">
       <DependentUpon>ReceiverWindow.xaml</DependentUpon>
     </Compile>
@@ -210,6 +213,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Dialogs\GetUserEmailID.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\ReceiverWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

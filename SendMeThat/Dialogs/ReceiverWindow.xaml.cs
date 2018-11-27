@@ -37,9 +37,35 @@ namespace SendMeThat
 
         private async void OnLoad()
         {
+            string UserEmail = GetUserEmailAddress();
+            if(UserEmail == null)
+            {
+                if (GeneralSettings.Default.UserEmail == "Empty" || GeneralSettings.Default.UserEmail == null)
+                {
+                    var dialog = new GetUserEmailID();
+                    if (dialog.ShowDialog() == true)
+                    {
+                        if (dialog.ResponseText != null && dialog.ResponseText.Count() != 0)
+                        {
+                            UserEmail = dialog.ResponseText;
+                            GeneralSettings.Default.UserEmail = UserEmail;
+                        }
+                        else
+                        {
+                            this.Close();
+                            MessageBox.Show("Unable to receive.");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    UserEmail = GeneralSettings.Default.UserEmail;
+                }
+            }
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(UriString);
-            string ReceiversEmail = GetUserEmailAddress();
+            string ReceiversEmail = UserEmail;
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             HttpResponseMessage response = await client.GetAsync("SendMeThat?ReceiversEmail=" + ReceiversEmail);
             List<SendMeThatModel> outputList = null;
@@ -86,7 +112,6 @@ namespace SendMeThat
             {
                 // Get user email address.
                 return (string)sk.GetValue(EmailAddressKeyName);
-
                 // You can also get user name like this.
                 // return (string)sk.GetValue(UserNameKeyName);
             }

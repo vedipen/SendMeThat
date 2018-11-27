@@ -37,7 +37,7 @@ namespace SendMeThat {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("dive@microsoft.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Empty")]
         public string UserEmail {
             get {
                 return ((string)(this["UserEmail"]));

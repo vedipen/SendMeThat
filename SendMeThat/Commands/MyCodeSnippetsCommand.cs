@@ -89,7 +89,13 @@ namespace SendMeThat
         private void Execute(object sender, EventArgs e)
         {
             var ReceiverControl = new ReceiverWindow();
-            ReceiverControl.ShowDialog();
+            try
+            {
+                ReceiverControl.ShowDialog();
+            }
+            catch(System.InvalidOperationException ex)
+            {
+            }
         }
     }
 }
