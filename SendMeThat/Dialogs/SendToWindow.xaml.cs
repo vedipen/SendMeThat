@@ -82,7 +82,14 @@ namespace SendMeThat
             HttpResponseMessage response = await client.PostAsJsonAsync("SendMeThat" ,codeModel); 
             if(response.IsSuccessStatusCode)
             {
-                MessageBox.Show("Code Sent! :)\nLogged in as "+ SendersName);
+                if (SendersName != null)
+                {
+                    MessageBox.Show("Code Sent! :)\nLogged in as " + SendersName);
+                }
+                else
+                {
+                    MessageBox.Show("Code Sent! :)");
+                }
             } else
             {
                 MessageBox.Show("Unable To Send :(");
