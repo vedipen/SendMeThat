@@ -74,14 +74,14 @@
           <ButtonText>Enable/Disable SendMeThat</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidSendMeThatPackageCmdSet1" id="cmdidDocumentCodeSpanCommand" priority="0x0100" type="Button">
+      <Button guid="guidSendMeThatPackageCmdSet1" id="cmdidDocumentCodeSpanCommand" priority="0x0001" type="Button">
         <Parent guid="guidSendMeThatPackageCmdSet1" id="EditorContextMenuGroup" />
         <Icon guid="guidImages1" id="bmpPic1" />
         <Strings>
           <ButtonText>Send this to..</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidSendMeThatPackageCmdSet2" id="cmdidMyCodeSnippetsCommand" priority="0x0100" type="Button">
+      <Button guid="guidSendMeThatPackageCmdSet2" id="cmdidMyCodeSnippetsCommand" priority="0x0001" type="Button">
         <Parent guid="guidSendMeThatPackageCmdSet2" id="MyCodeSnippetGroup" />
         <Icon guid="guidImages2" id="bmpPic1" />
         <Strings>
@@ -122,12 +122,12 @@
       <IDSymbol name="bmpPicArrows" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
-  
+
     <GuidSymbol value="{ade733d3-d1e6-4677-928b-d8164419b6a4}" name="guidSendMeThatPackageCmdSet1">
       <IDSymbol value="4128" name="EditorContextMenuGroup" />
       <IDSymbol value="256" name="cmdidDocumentCodeSpanCommand" />
     </GuidSymbol>
-  
+
     <GuidSymbol value="{891749e9-341e-4949-8f7e-7e04a250d65a}" name="guidImages1">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
@@ -136,12 +136,12 @@
       <IDSymbol name="bmpPicArrows" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
-  
+
     <GuidSymbol value="{1b92d865-37ff-43df-b641-0680928faa58}" name="guidSendMeThatPackageCmdSet2">
       <IDSymbol value="4128" name="MyCodeSnippetGroup" />
       <IDSymbol value="256" name="cmdidMyCodeSnippetsCommand" />
     </GuidSymbol>
-  
+
     <GuidSymbol value="{d38de274-2b41-4d25-adc2-13c9517d85ec}" name="guidImages2">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
